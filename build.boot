@@ -4,7 +4,8 @@
                   [hoplon/hoplon             "6.0.0-alpha17"]
                   [org.clojure/clojure       "1.8.0"]
                   [org.clojure/clojurescript "1.9.293"]
-                  [tailrecursion/boot-jetty  "0.1.3"]]
+                  [tailrecursion/boot-jetty  "0.1.3"]
+                  [cljsjs/bootstrap          "3.3.6-1"]]
   :source-paths #{"src"}
   :asset-paths  #{"assets"})
 

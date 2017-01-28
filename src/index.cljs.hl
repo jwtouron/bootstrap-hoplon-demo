@@ -1,7 +1,85 @@
-(page "index.html")
+(page "index.html"
+  (:require [cljsjs.bootstrap]))
+
+(def route (route-cell))
+
+(defn documents
+  []
+  (let [alert-display (cell "display:none")
+        alert-doc-num (cell nil)]
+    (div
+     (ul :class "list-group"
+       (map (fn [x]
+              (li :class "list-group-item"
+                  (a :click #(do (reset! alert-display "display:\"\"")
+                                 (reset! alert-doc-num x))
+                     (str "Document " x))))
+            (range 1 6)))
+     (div :class "alert alert-success alert-dismissable fade in" :id "documents"
+          :style alert-display
+          (a :click #(reset! alert-display "display:none")
+             :class "close"
+             :html "&times")
+          (text "You clicked document ~{alert-doc-num}")))))
+
+(defn dropdown-menu
+  []
+  (div :class "dropdown"
+       (button :type "button" :class "btn btn-default dropdown-toggle" :data-toggle "dropdown"
+               (span :class "glyphicon glyphicon-menu-hamburger"))
+       (ul :class "dropdown-menu nav nav-pills nav-stacked" :role "menu"
+         (li (a "Menu Item 1"))
+         (li (a "Menu Item 2"))
+         (li (a "Menu Item 3")))))
+
+(defn main-navbar
+  []
+  (ul :class "nav navbar-default navbar-fixed-size nav-pills nav-stacked"
+    (li :role "presentation"
+        :class (cell= {:active (= route "#documents")})
+        (a :href "/#documents" "Documents"))
+    (li :role "presentation"
+        :class (cell= {:active (= route "#settings")})
+        (a :href "/#settings" "Settings"))))
+
+(defn settings
+  []
+  (div
+   (div :class "input-group"
+        (span :class "input-group-addon" "Setting 1:")
+        (input :class "form-control" :type "text" :placeholder "Setting 3 default"))
+   (div :style "margin-top: 5px; margin-bottom: 5px")
+   (div :class "input-group"
+        (span :class "input-group-addon" "Setting 2:")
+        (input :class "form-control" :type "text" :placeholder "Setting 3 default"))
+   (div :style "margin-top: 5px; margin-bottom: 5px")
+   (div :class "input-group"
+        (span :class "input-group-addon" "Setting 3:")
+        (input :class "form-control" :type "text" :placeholder "Setting 3 default"))
+   (div :style "margin-top: 5px; margin-bottom: 5px")
+   (button :type "button" :class "btn btn-primary" :style "float:right"
+           :data-target "#settings-saved-modal" :data-toggle "modal"
+           "Save")
+   (div :class "modal fade" :id "settings-saved-modal" :role "dialog"
+        (div :class "modal-dialog"
+             (div :class "modal-content"
+                  (div :class "modal-header" (label "Settings Saved"))
+                  (div :class "modal-body" (label "Your settings have been saved."))
+                  (div :class "modal-footer"
+                       (button :type "button" :class "btn btn-default" :data-dismiss "modal" "Close")))))))
 
 (html
   (head
-    (link :href "app.css" :rel "stylesheet" :type "text/css"))
+    (link :href "app.css" :rel "stylesheet" :type "text/css")
+    (link :rel "stylesheet" :href "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"))
   (body
-    (h1 "Hello, Hoplon!")))
+    (div :class "container"
+         (div :class "row"
+              (div :class "col-xs-3"
+                   (dropdown-menu)
+                   (div :style "margin-top: 10px; margin-botton: 10px")
+                   (main-navbar))
+              (div :class "col-xs-9"
+                   (case-tpl route
+                     "#documents" (documents)
+                     "#settings" (settings)))))))
